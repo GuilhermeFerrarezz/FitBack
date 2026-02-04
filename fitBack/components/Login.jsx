@@ -1,26 +1,68 @@
 import React, { useEffect, useState } from 'react';
-import { View, Button, Text, StyleSheet } from 'react-native';
+import { View, Button, Text, StyleSheet, Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
-import { setNativeProps } from 'react-native-reanimated';
+import * as GoogleAuthSession from 'expo-auth-session/providers/google';
+import {GoogleSignin, GoogleSigninButton, statusCodes} from "@react-native-google-signin/google-signin"
 WebBrowser.maybeCompleteAuthSession();
-const backendUrl = 'http://localhost:5000'
+const backendUrl = 'http://10.0.2.2:5000'
 export default function Login() {
-    const [userData, setUserData] = useState(null);
-    const [req, res, promptAsync] = Google.useAuthRequest({
-        webClientId: process.env.EXPO_PUBLIC_CLIENT_WEB_ID,
+    const [error, setError] = useState()
+    const [userData, setUserData] = useState();
+    const webClientId = process.env.EXPO_PUBLIC_WEB_CLIENT_ID
+    const androidClientId = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID
+    const [req, res, promptAsync] = GoogleAuthSession.useAuthRequest({
+        webClientId: webClientId,
+        androidClientId: androidClientId
+
     });
 
+
+    const configureGoogleSignin = () => {
+        GoogleSignin.configure({
+            webClientId: webClientId ,
+            offlineAccess: true,
+            androidClientId: androidClientId,
+            scopes: ['profile', 'email'],
+        })
+    };
+    console.log('Web: ', webClientId)
+
     useEffect(() => {
-        if (res?.type == 'success') {
-            const tokenGoogle = res.authentication.accessToken
-            console.log("Token do google: ", tokenGoogle)
-            sendTokenToBackend(tokenGoogle)
+        if (Platform.OS === 'android') {
+            configureGoogleSignin()
+            ;
         }
-    }, [res])
+    }, []);
+
+    useEffect(() => {
+        if (res?.type === 'success') {
+            const { authentication } = res;
+            sendTokenToBackend(authentication.idToken || authentication.accessToken);
+        }
+    }, [res]);
+    
+    const signIn = async () => {
+        console.log('Pressionou Login')
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn()
+            const { accessToken, idToken } = await GoogleSignin.getTokens();
+            console.log("Access Token:", accessToken);
+            //console.log("ID Token:", idToken);
+            await sendTokenToBackend(accessToken);
+
+            
+        } catch (e) {
+            setError(e)
+            
+        }
+    }
+
+
 
     const sendTokenToBackend = async (tokenGoogle) => {
         try {
+            console.log('enviou')
             const response= await fetch(`${backendUrl}/fitback/auth/google`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -45,45 +87,22 @@ export default function Login() {
 
     return (
         <View>
-            <Button
-            disabled={!req}
-            title="Login com Google"
-            onPress={() => {
-            promptAsync();
-          }}
-        />
-    </View>
-        
+            <Text>Fazer login com google</Text>
+
+            {Platform.OS === 'android' ? (
+                <GoogleSigninButton size={GoogleSigninButton.Size.Standart} color={GoogleSigninButton.Color.Dark} onPress={signIn}> </GoogleSigninButton>
+            ) : (
+                <Button
+                    disabled={!req}
+                    title="Login com Google"
+                    onPress={() => {
+                        promptAsync();
+                    }}
+                />)}
+            </View>
 
 
-
-
-
-
-
-    )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
+        )
 
 }
 
