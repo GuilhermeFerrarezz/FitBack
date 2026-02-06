@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Platform, Text, Pressable } from 'react-native';
 import styled from 'styled-components/native';
 import Svg, { G, Path } from 'react-native-svg';
@@ -6,105 +6,114 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { router } from 'expo-router'
 
-const LoginForm = ({ onGooglePress, onSignInPress }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-const [isFocused, setIsFocused] = useState(null);
-        const [message, setMessage] = useState('')
-    
+const LoginForm = ({ onGooglePress, onSignInPress, mes }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isFocused, setIsFocused] = useState(null);
+    const [message, setMessage] = useState('')
+
+    useEffect(() => {
+        if (mes) {
+            setMessage(mes);
+        }
+    }, [mes]);
+
+
+
 
     const verifyData = async () => {
-        console.log('Verificando')
         if (!password || !email) {
             setMessage('Ambos os cambos devem ser preenchidos')
         } else {
             const res = await onSignInPress({ email, password })
             setMessage(res)
-            
+
         }
-
-
     }
-    
+    const googleLoginVeirfy = async () => {
+        const res = await onGooglePress()
+        if (typeof res !== 'object') {
+            setMessage(res)
+        }
+    }
 
 
-  return (
-    <FormCard>
+    return (
+        <FormCard>
 
-      <FlexColumn>
-        <Label>Email</Label>
-      </FlexColumn>
-      <InputContainer isFocused={isFocused === 'email'}>
-        <Svg height={20} width={20} viewBox="0 0 32 32">
-          <G id="Layer_3">
-            <Path 
-              fill={isFocused === 'email' ? "#2d79f3" : "#151717"}
-              d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z" 
-            />
-          </G>
-        </Svg>
-        <Input 
-          placeholder="Enter your Email" 
-          placeholderTextColor="#aaa"
-          value={email}
-          onChangeText={setEmail}
-          onFocus={() => setIsFocused('email')}
-          onBlur={() => setIsFocused(null)}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-      </InputContainer>
+            <FlexColumn>
+                <Label>Email</Label>
+            </FlexColumn>
+            <InputContainer isFocused={isFocused === 'email'}>
+                <Svg height={20} width={20} viewBox="0 0 32 32">
+                    <G id="Layer_3">
+                        <Path
+                            fill={isFocused === 'email' ? "#2d79f3" : "#151717"}
+                            d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z"
+                        />
+                    </G>
+                </Svg>
+                <Input
+                    placeholder="Enter your Email"
+                    placeholderTextColor="#aaa"
+                    value={email}
+                    onChangeText={setEmail}
+                    onFocus={() => setIsFocused('email')}
+                    onBlur={() => setIsFocused(null)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+            </InputContainer>
 
-      {/* Campo Senha */}
-      <FlexColumn>
-        <Label>Password</Label>
-      </FlexColumn>
-      <InputContainer isFocused={isFocused === 'password'}>
-        <MaterialIcons name="password" size={24} color="black" />
-        <Input 
-          placeholder="Enter your Password" 
-          placeholderTextColor="#aaa"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-          onFocus={() => setIsFocused('password')}
-          onBlur={() => setIsFocused(null)}
-        />
-      </InputContainer>
+            {/* Campo Senha */}
+            <FlexColumn>
+                <Label>Senha</Label>
+            </FlexColumn>
+            <InputContainer isFocused={isFocused === 'password'}>
+                <MaterialIcons name="password" size={24} color="black" />
+                <Input
+                    placeholder="Enter your Password"
+                    placeholderTextColor="#aaa"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setIsFocused('password')}
+                    onBlur={() => setIsFocused(null)}
+                />
+            </InputContainer>
 
-      <FlexRow>
+            <FlexRow>
 
-        <TouchableOpacity>
-          <BlueText>Forgot password?</BlueText>
-        </TouchableOpacity>
-      </FlexRow>
+                <TouchableOpacity>
+                    <BlueText>Esqueceu a senha?</BlueText>
+                </TouchableOpacity>
+            </FlexRow>
 
-      <ButtonSubmit onPress={verifyData}>
-        <ButtonText>Sign In</ButtonText>
-      </ButtonSubmit>
+            <ButtonSubmit onPress={verifyData}>
+                <ButtonText>Sign In</ButtonText>
+            </ButtonSubmit>
 
-      <FooterText>
-        Don't have an account? <TouchableOpacity onPress = {()=>{router.navigate({ pathname: '../screens/SingUp' })}}><BlueText>Sign Up</BlueText></TouchableOpacity>
-      </FooterText>
-      
-      <DividerContainer>
-        <Line />
-        <DividerText>Or With</DividerText>
-        <Line />
-      </DividerContainer>
+            <FooterText>
+                Não tem uma conta? <TouchableOpacity onPress={() => { router.navigate({ pathname: '../screens/SingUp' }) }}><BlueText>Sign Up</BlueText></TouchableOpacity>
+            </FooterText>
 
-      <SocialContainer>
-  <SocialButton onPress={onGooglePress}>
-    <AntDesign name="google" size={20} color="black" style={{ marginRight: 10 }} />
-    <SocialText>Google</SocialText>
-  </SocialButton>
-          </SocialContainer>
-          <Text style={{fontSize: 20, color: 'red', marginTop: 10}}>{message}</Text>
-    </FormCard>
-  );
+            <DividerContainer>
+                <Line />
+                <DividerText>Ou com</DividerText>
+                <Line />
+            </DividerContainer>
+
+            <SocialContainer>
+                <SocialButton onPress={googleLoginVeirfy}>
+                    <AntDesign name="google" size={20} color="black" style={{ marginRight: 10 }} />
+                    <SocialText>Google</SocialText>
+                </SocialButton>
+            </SocialContainer>
+            <Text style={{ fontSize: 20, color: 'red', marginTop: 10 }}>{message}</Text>
+        </FormCard>
+    );
 };
 
-// --- Estilos Reativos ---
 
 const FormCard = styled.View`
   background-color: #ffffff;

@@ -39,8 +39,9 @@ export default function SignUp() {
                 console.log('Erro do servidor:', error.response.status);
             }
             }
-            return 'Erro ao conectar com banco de dados. Tente novamente'
             console.log("Connection erro", error)
+            return 'Erro ao conectar com banco de dados. Tente novamente'
+            
         
     }
         

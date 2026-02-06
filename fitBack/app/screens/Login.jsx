@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View,  Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as GoogleAuthSession from 'expo-auth-session/providers/google';
-import {GoogleSignin} from "@react-native-google-signin/google-signin"
+import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { AuthContext } from '../contexts/AuthContext.jsx';
 import LoginForm from '../../components/FormLogin.jsx';
 import api from '../../services/api.js'
@@ -26,12 +26,9 @@ export default function Login() {
         GoogleSignin.configure({
             webClientId: webClientId,
             offlineAccess: true,
-            androidClientId: androidClientId,
             scopes: ['profile', 'email'],
         })
     };
-    console.log('Web: ', webClientId)
-
     useEffect(() => {
         if (Platform.OS === 'android') {
             configureGoogleSignin()
@@ -45,22 +42,22 @@ export default function Login() {
             sendTokenToBackend(authentication.idToken || authentication.accessToken);
         }
     }, [res]);
-    
+
     const handleGoogleLogin = async () => {
-        console.log('Pressionou Login')
         try {
             await GoogleSignin.hasPlayServices();
+            GoogleSignin.signIn()
             const { accessToken, idToken } = await GoogleSignin.getTokens();
-            await sendTokenToBackend(accessToken);
+            const message = await sendTokenToBackend(accessToken);
+            console.log('Mensagem de erro ', message)
+            return message
 
-        } catch (e) {
-            setError(e)
-            
+        } catch (error) {
+            setError(error)
+
         }
     }
     const handleEmailLogin = async (credentials) => {
-        console.log('Login Email')
-        console.log(credentials)
         try {
             if (credentials) {
                 const { email, password } = credentials
@@ -73,56 +70,62 @@ export default function Login() {
                     console.log(response.data)
                     await signIn(response.data);
                 }
+            }
+
+        } catch (error) {
+            if (error.response) {
+                const backendMessage = error.response.data.message
+                if (error.response.status === 401) {
+                    return backendMessage
+                } else {
+                    console.log('Erro do servidor:', error.response.status);
+                }
+            }
+            console.log("Connection erro", error)
+
         }
+
+
+
+    }
+
+    const sendTokenToBackend = async (tokenGoogle) => {
+        try {
+            console.log('enviou')
+            const response = await api.post('/fitback/auth/google', {
+                token: tokenGoogle
+            });
+            if (response.status === 200 || response.status === 201) {
+                console.log('Login successful');
+                console.log(response.data);
+                setError('')
+                await signIn(response.data);
+            }
 
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 500) {
-                console.log('Credenciais incorretas (Erro 401)');
-                
-            } else {
-                console.log('Erro do servidor:', error.response.status);
+                    setError('Email já cadastrado')
+                    return 'Email já cadastrado'
+                }
+
             }
-            }
-            console.log("Connection erro", error)
-        
-    }
-        
-
-        
-    } 
-
-     const sendTokenToBackend = async (tokenGoogle) => {
-        try {
-            console.log('enviou')
-            const response = await api.post('/fitback/auth/google', { 
-            token: tokenGoogle 
-        });
-            if (response.status === 200 || response.status === 201) {
-            console.log('Login successful');
-            console.log(response.data); 
-            await signIn(response.data);
         }
-
-        } catch (error) {
-            console.log("Connection erro", error)
-        }
-    
     }
 
 
 
     return (
         <View style={styles.container}>
-            <Text style = {styles.title}>FITBACK</Text>
+            <Text style={styles.title}>FITBACK</Text>
             {Platform.OS === 'android' ? (
                 <LoginForm
-                    onGooglePress={handleGoogleLogin} 
+                    onGooglePress={handleGoogleLogin}
                     onSignInPress={(credentials) => handleEmailLogin(credentials)}
                 />
             ) : (
-                <LoginForm
-               
+                <LoginForm mes={error}
+
                     onGooglePress={() => promptAsync()}
                     onSignInPress={(credentials) => handleEmailLogin(credentials)}
                 />
