@@ -5,8 +5,8 @@ import { AuthProvider } from './contexts/AuthContext.jsx'
 
 export default function Index() {
     return (
-        <AuthProvider>
+        
             <Router />
-        </AuthProvider>
+
     );
 }

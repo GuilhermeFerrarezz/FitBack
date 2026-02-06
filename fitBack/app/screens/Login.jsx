@@ -82,6 +82,7 @@ export default function Login() {
                 }
             }
             console.log("Connection erro", error)
+            return 'Erro ao conectar com banco de dados. Tente novamente'
 
         }
 
@@ -110,6 +111,7 @@ export default function Login() {
                 }
 
             }
+            setError('Erro ao conectar com banco de dados. Tente novamente')
         }
     }
 
