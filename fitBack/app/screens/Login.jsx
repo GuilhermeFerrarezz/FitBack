@@ -6,6 +6,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin"
 import { AuthContext } from '../contexts/AuthContext.jsx';
 import LoginForm from '../../components/FormLogin.jsx';
 import api from '../../services/api.js'
+import { router } from 'expo-router'
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
@@ -68,6 +69,7 @@ export default function Login() {
                 if (response.status === 200 || response.status === 201) {
                     console.log('Login successful')
                     console.log(response.data)
+                    router.navigate({ pathname: '../' })
                     await signIn(response.data);
                 }
             }
@@ -101,6 +103,7 @@ export default function Login() {
                 console.log(response.data);
                 setError('')
                 await signIn(response.data);
+                router.navigate({ pathname: '../' })
             }
 
         } catch (error) {

@@ -26,11 +26,18 @@ export const AuthProvider = ({ children }) => {
         await AsyncStorage.setItem('user', JSON.stringify(userData))
     }
     const signOut = async () => {
+
+        try {
+            GoogleSignin.revokeAccess();
+            await GoogleSignin.signOut()
+        } catch (error) {
+            
+        } finally {
+            await AsyncStorage.removeItem('user')
+            setUser(null);
+        }
+            
         
-        GoogleSignin.revokeAccess();
-        await GoogleSignin.signOut()
-        await AsyncStorage.removeItem('user')
-        setUser(null);
     }
     return (
         <AuthContext.Provider value={{ signed: !!user, user, signIn, signOut, loading }}>

@@ -1,18 +1,56 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext.jsx';
-
+import api from '../../services/api.js'
 export default function Home() {
     const { user, signOut } = useContext(AuthContext);
+    const [fichas, setFichas ] = useState(null)
+    
+    const loadFichas = async () => {
+        try {
+            const response = await api.get('/fitback/fichas/')
+            setFichas(response.data)
+            console.log(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
+
+
+
+    useEffect(() => {
+        loadFichas()
+        
+
+        
+
+    }, [])
+
+
+
+
     return (
         <View style={styles.container}>
             <View style = {styles.ProfileContainer}>
                 {user?.user?.avatar ?
                     (<Image source={user?.user?.avatar} style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10 }}></Image>) : (<></>)}
-                  <Text style={styles.title}>{user?.user?.name}</Text>
-
+                  <Text style={styles.title}>Olá {user?.user?.name}</Text>
             </View>
-            <Text>E-mail: {user?.user?.email}</Text>
+            <Text style={{ fontSize: 20 }}>E-mail: {user?.user?.email}</Text>
+
+            {!fichas || fichas.length === 0 ?
+                (<Text>Você ainda não possui fichas</Text>) :
+
+
+                (fichas.map((ficha, index) => (
+
+                <Text key={index}>{ficha.name}</Text>)            
+            
+            ))
+            
+            }
+
         </View>
     );
 }
