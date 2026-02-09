@@ -60,13 +60,11 @@ api.interceptors.response.use(
 
                 const newAccessToken = data.data.accessToken
                 const newRefreshToken = data.data.refreshToken
-                const user = data_user.user
+                //const user = data_user.user
                 const newUser = {
                     refreshToken: newRefreshToken,
                     token: newAccessToken,
-                    user: {
-                        user
-                    }
+                    user: data_user.user
                 }
                 await AsyncStorage.setItem('user', JSON.stringify(newUser))
                 api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
