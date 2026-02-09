@@ -1,11 +1,11 @@
 import { Image, Pressable } from 'react-native';
-
+import api from '../services/api.js'
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function Ficha({ id, name }) {
+export default function Ficha({ id, name, onDeletePress }) {
 
     const loadTreino = () => {
         console.log('Pressionou')
@@ -14,8 +14,20 @@ export default function Ficha({ id, name }) {
         console.log('Edit')
         
     }
-    const removeTreino = () => {
-        console.log('Remove')
+    const removeTreino = async () => {
+        try {
+            if (id) {
+                const response = await api.delete(`/fitback/ficha/${id}`)
+                console.log(response)
+                if (response.status == 204) {
+                    onDeletePress()
+                }
+
+            }
+        } catch (error) {
+            console.log('Erro ao deletar ', error)
+            
+        }
         
     }
 

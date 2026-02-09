@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable, Image, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image, Modal, TextInput, Alert, ScrollView } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { AuthContext } from '../contexts/AuthContext.jsx';
@@ -24,13 +24,28 @@ export default function Home() {
 
     }
     const createFicha = async () => {
-        
+        if (newFichaName.trim() === '') {
+            Alert.alert("Erro", "Por favor, digite um nome para a ficha.");
+            return;
+        }
+        try {
+            const response = await api.post('/fitback/ficha/', {
+                name: newFichaName
+            })
+            console.log(response)
+            if (response.status == 201) {
+                setModalVisible(false)
+                loadFichas()
+            }
 
-
-
+        } catch (error) {
+            Alert.alert("Erro ao conectar com servidor");
+            
+        }
+        console.log('Criou')
     }
 
-
+    
 
     useEffect(() => {
         loadFichas()
@@ -42,6 +57,42 @@ export default function Home() {
 
     return (
         <View style={styles.container}>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalCenteredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalTitle}>Nova Ficha</Text>
+                        
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Nome do treino"
+                            value={newFichaName}
+                            onChangeText={setNewFichaName}
+                            autoFocus={true} 
+                        />
+
+                        <View style={styles.modalButtons}>
+                            <Pressable 
+                                style={[styles.buttonModal, styles.buttonCancel]} 
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.textStyle}>Cancelar</Text>
+                            </Pressable>
+
+                            <Pressable 
+                                style={[styles.buttonModal, styles.buttonSave]} 
+                                onPress={createFicha}
+                            >
+                                <Text style={styles.textStyle}>Salvar</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
 
             <View style={styles.cabecalhoContainer}>
                 <View style={{flexDirection:'row'}}>
@@ -52,28 +103,28 @@ export default function Home() {
                         (<Image source={user?.user?.avatar} style={{ width: 40, height: 40, borderRadius: 20}}></Image>)}
                 </View>
                     <Text style={styles.title}>{user?.user?.name}</Text>
-                    </View>
-                    <Text style={styles.email }>{user?.user?.email}</Text>
-
-                
+                    </View>    
+            
             </View>
+            <Text style={styles.email }>{user?.user?.email}</Text>
 
             <View style={{flexDirection:'row', marginTop: 100, marginLeft: 20}}>
             <Text style={{ fontSize: 25, fontFamily: 'Arial', marginRight: 10 }}>Treinos</Text>
-            <Pressable onPress={createFicha}><Entypo name="plus" size={30} color="black" /></Pressable>
+            <Pressable onPress={() => setModalVisible(true)}><Entypo name="plus" size={30} color="black" /></Pressable>
             </View>
 
-
+             <ScrollView>       
             {!fichas || fichas.length === 0 ?
                 (<Text>Você ainda não possui fichas</Text>) :
 
 
                 (fichas.map((ficha) => (
-                    <Ficha name={ficha.name} id= {ficha.id}></Ficha>
+                    <Ficha name={ficha.name} id={ficha.id} onDeletePress={loadFichas}></Ficha>
                 )
                 ))
 
-            }
+                }
+             </ScrollView>    
 
 
             
@@ -124,9 +175,69 @@ const styles = StyleSheet.create({
     email: {
         fontSize: 15,
         marginTop: 20,
-        marginRight: 10,
+        marginLeft: 20,
         color: '#888888'
         
+    },
+    modalCenteredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: 'rgba(0,0,0,0.5)' // Fundo escuro transparente
+    },
+    modalView: {
+        width: '80%',
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    modalTitle: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    input: {
+        height: 40,
+        width: '100%',
+        margin: 12,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 10
+    },
+    buttonModal: {
+        borderRadius: 10,
+        padding: 10,
+        elevation: 2,
+        width: '45%',
+        alignItems: 'center'
+    },
+    buttonSave: {
+        backgroundColor: "#2196F3",
+    },
+    buttonCancel: {
+        backgroundColor: "#ff4444",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
     }
 
 });
