@@ -4,11 +4,15 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router'
 export default function Ficha({ id, name, onDeletePress }) {
 
-    const loadTreino = () => {
+    const loadTreino = async () => {
         console.log('Pressionou')
+        await AsyncStorage.setItem('idFicha', JSON.stringify(id))
+        router.navigate({ pathname: '../screens/Treino' })
+
     }
     const editTreino = () => {
         console.log('Edit')
