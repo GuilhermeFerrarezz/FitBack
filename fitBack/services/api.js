@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let baseUrl = null
 if (Platform.OS == 'android') {
-    baseUrl = 'http://10.0.2.2:5000'
+    baseUrl = 'http://192.168.100.216:5000'
     
 } else {
     baseUrl = 'http://192.168.100.216:5000'

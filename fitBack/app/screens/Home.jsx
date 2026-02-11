@@ -41,7 +41,7 @@ export default function Home() {
             }
 
         } catch (error) {
-            Alert.alert("Erro ao conectar com servidor");
+            Alert.alert("Erro ao conectar com servidor. Logue novamente");
             
         }
         console.log('Criou')
@@ -63,7 +63,7 @@ export default function Home() {
             }
 
         } catch (error) {
-            Alert.alert("Erro ao conectar com servidor");
+            Alert.alert("Erro ao conectar com servidor. Logue novamente");
         }
 
     }
@@ -101,7 +101,7 @@ export default function Home() {
             >
                 <View style={styles.modalCenteredView}>
                     <View style={styles.modalView}>
-                        {!isEdit ? (<Text style={styles.modalTitle}>Nova Ficha</Text>): (<Text style={styles.modalTitle}>Editar Ficha</Text>) }
+                        {!isEdit ? (<Text style={styles.modalTitle}>Nova Ficha</Text>):(<Text style={styles.modalTitle}>Editar Ficha</Text>) }
                         
                         
                         <TextInput
@@ -119,11 +119,8 @@ export default function Home() {
                             >
                                 <Text style={styles.textStyle}>Cancelar</Text>
                             </Pressable>
-                            {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createFicha}>
-                                <Text style={styles.textStyle}>Salvar</Text> </Pressable>) :
-                                
-                                (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={editFicha}>
-                                <Text style={styles.textStyle}>Editar</Text>  </Pressable>)}
+                            {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createFicha}><Text style={styles.textStyle}>Salvar</Text></Pressable>):
+                                (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={editFicha}><Text style={styles.textStyle}>Editar</Text></Pressable>)}
                            
                         </View>
                     </View>
@@ -131,12 +128,12 @@ export default function Home() {
             </Modal>
 
             <View style={styles.cabecalhoContainer}>
-                <View style={{flexDirection:'row'}}>
+                <View style={{flexDirection:'row', flex: 1, alignItems: 'center', paddingRight: 10}}>
                 <View style={styles.ProfileContainer}>
                     
                     {!user?.user?.avatar ?
                         (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
-                        (<Image source={user?.user?.avatar} style={{ width: 40, height: 40, borderRadius: 20}}></Image>)}
+                        (<Image source={{uri: user?.user?.avatar}} style={{ width: 40, height: 40, borderRadius: 20}}></Image>)}
                 </View>
                     <Text style={styles.title}>{user?.user?.name}</Text>
                     </View>    
@@ -183,7 +180,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        marginTop: 15,
+        flex: 1,          
+        flexWrap: 'wrap',
         marginLeft: 10,
     },
     button: {

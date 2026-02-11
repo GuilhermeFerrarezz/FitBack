@@ -22,12 +22,14 @@ export default function Exercicio({onDeletePress, data, onEditPress }) {
                 console.log(response)
                 if (response.status == 204) {
                     onDeletePress()
+                } else {
+                     Alert.alert("Erro ao conectar com servidor. Logue novamente");
                 }
 
             }
         } catch (error) {
             console.log('Erro ao deletar ', error)
-            Alert.alert("Erro ao conectar com servidor");
+            Alert.alert("Erro ao conectar com servidor. Logue novamente");
             
         }
         

@@ -46,10 +46,10 @@ export default function Treino() {
         try {
             const response = await api.post(`/fitback/exercicio/${IdFicha}`, {
                 name: newExercicioName,
-                peso: parseFloat(newPesoName),
+                peso: newPesoName,
                 pesoType: newPesoType,
-                series: parseFloat(newSerieName),
-                repeticoes: parseFloat(newRepeticaoName),
+                series: newSerieName,
+                repeticoes: newRepeticaoName,
                 observacoes: newObservacaoName
             })
 
@@ -61,7 +61,7 @@ export default function Treino() {
             }
 
         } catch (error) {
-            Alert.alert("Erro ao conectar com servidor");
+            Alert.alert("Erro ao conectar com servidor. Logue novamente");
 
         }
         console.log('Criou')
@@ -87,10 +87,12 @@ export default function Treino() {
             if (response.status == 200) {
                 setModalVisible(false)
                 loadExercicio()
+            } else {
+                 Alert.alert("Erro ao conectar com servidor. Logue novamente");
             }
 
         } catch (error) {
-            Alert.alert("Erro ao conectar com servidor");
+            Alert.alert("Erro ao conectar com servidor. Logue novamente");
 
         }
         console.log('Criou')
@@ -171,7 +173,7 @@ useFocusEffect(
             >
                 <View style={styles.modalCenteredView}>
                     <View style={styles.modalView}>
-                        {!isEdit ? (<Text style={styles.modalTitle}>Novo Exercício</Text>): (<Text style={styles.modalTitle}>Editar Exercício</Text>) }
+                        {!isEdit ? (<Text style={styles.modalTitle}>Novo Exercício</Text>):(<Text style={styles.modalTitle}>Editar Exercício</Text>) }
 
                         <TextInput
                             style={styles.input}
@@ -232,12 +234,12 @@ useFocusEffect(
             </Modal>
 
             <View style={styles.cabecalhoContainer}>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', paddingRight: 10 }}>
                     <View style={styles.ProfileContainer}>
 
                         {!user?.user?.avatar ?
                             (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
-                            (<Image source={user?.user?.avatar} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
+                            (<Image source={{uri: user?.user?.avatar}} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
                     </View>
                     <Text style={styles.title}>{user?.user?.name}</Text>
                 </View>
@@ -289,7 +291,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        marginTop: 15,
+        flex: 1,          
+        flexWrap: 'wrap',
         marginLeft: 10,
     },
     button: {
