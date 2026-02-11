@@ -47,7 +47,7 @@ export default function Login() {
     const handleGoogleLogin = async () => {
         try {
             await GoogleSignin.hasPlayServices();
-            GoogleSignin.signIn()
+            await GoogleSignin.signIn()
             const { accessToken, idToken } = await GoogleSignin.getTokens();
             const message = await sendTokenToBackend(accessToken);
             console.log('Mensagem de erro ', message)

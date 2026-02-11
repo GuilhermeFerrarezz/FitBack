@@ -10,6 +10,8 @@ export default function Home() {
     const [fichas, setFichas] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
     const [newFichaName, setNewFichaName] = useState('');
+    const [isEdit, setIsEdit] = useState(false)
+    const [idFichaEdit, setIdFichaEdit] = useState(null)
     const loadFichas = async () => {
         try {
             const response = await api.get('/fitback/fichas/')
@@ -44,6 +46,40 @@ export default function Home() {
         }
         console.log('Criou')
     }
+    const editFicha = async () => {
+        const id = idFichaEdit
+        if (newFichaName.trim() === '') {
+            Alert.alert("Erro", "Por favor, digite um nome para a ficha.");
+            return;
+        }
+        try {
+            const response = await api.put(`/fitback/ficha/${id}`, {
+                name: newFichaName
+            })
+            console.log(response)
+            if (response.status == 200) {
+                setModalVisible(false)
+                loadFichas()
+            }
+
+        } catch (error) {
+            Alert.alert("Erro ao conectar com servidor");
+        }
+
+    }
+    const onPressEdit = async (id) => {
+        const response = await api.get(`/fitback/ficha/${id}`)
+        const nameOld = response.data.name
+        setNewFichaName(nameOld)
+        setIdFichaEdit(id)
+        setIsEdit(true)
+        setModalVisible(true)
+    }
+
+
+
+
+
 
     
 
@@ -65,7 +101,8 @@ export default function Home() {
             >
                 <View style={styles.modalCenteredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>Nova Ficha</Text>
+                        {!isEdit ? (<Text style={styles.modalTitle}>Nova Ficha</Text>): (<Text style={styles.modalTitle}>Editar Ficha</Text>) }
+                        
                         
                         <TextInput
                             style={styles.input}
@@ -82,13 +119,12 @@ export default function Home() {
                             >
                                 <Text style={styles.textStyle}>Cancelar</Text>
                             </Pressable>
-
-                            <Pressable 
-                                style={[styles.buttonModal, styles.buttonSave]} 
-                                onPress={createFicha}
-                            >
-                                <Text style={styles.textStyle}>Salvar</Text>
-                            </Pressable>
+                            {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createFicha}>
+                                <Text style={styles.textStyle}>Salvar</Text> </Pressable>) :
+                                
+                                (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={editFicha}>
+                                <Text style={styles.textStyle}>Editar</Text>  </Pressable>)}
+                           
                         </View>
                     </View>
                 </View>
@@ -110,7 +146,10 @@ export default function Home() {
 
             <View style={{flexDirection:'row', marginTop: 100, marginLeft: 20}}>
             <Text style={{ fontSize: 25, fontFamily: 'Arial', marginRight: 10 }}>Treinos</Text>
-            <Pressable onPress={() => setModalVisible(true)}><Entypo name="plus" size={30} color="black" /></Pressable>
+                <Pressable onPress={() => {
+                    setModalVisible(true)
+                    setIsEdit(false)
+                }}><Entypo name="plus" size={30} color="black" /></Pressable>
             </View>
 
              <ScrollView>       
@@ -119,7 +158,7 @@ export default function Home() {
 
 
                 (fichas.map((ficha) => (
-                    <Ficha name={ficha.name} id={ficha.id} onDeletePress={loadFichas}></Ficha>
+                    <Ficha key={ficha.id} name={ficha.name} id={ficha.id} onDeletePress={loadFichas} onEditPress={ (id) => onPressEdit(id)}></Ficha>
                 )
                 ))
 

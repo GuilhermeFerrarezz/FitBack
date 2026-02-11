@@ -6,7 +6,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router'
-export default function Ficha({ id, name, onDeletePress }) {
+export default function Ficha({ id, name, onDeletePress, onEditPress }) {
 
     const loadTreino = async () => {
         console.log('Pressionou')
@@ -16,7 +16,7 @@ export default function Ficha({ id, name, onDeletePress }) {
     }
     const editTreino = () => {
         console.log('Edit')
-        
+        onEditPress(id)        
     }
     const removeTreino = async () => {
         try {
@@ -70,7 +70,7 @@ const styles = {
         marginTop: 10,
         backgroundColor: '#f7f3f3ff',
         borderRadius: 20,
-        width: 350,
+        width: '85%',
         height: 40,
         justifyContent: 'space-between',
         flexDirection: 'row'

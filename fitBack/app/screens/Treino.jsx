@@ -5,60 +5,161 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { AuthContext } from '../contexts/AuthContext.jsx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../services/api.js'
-import Ficha from '../../components/TreinoFicha.jsx'
+import Exercicio from '../../components/TreinoExercicio.jsx'
 import { useFocusEffect } from 'expo-router';
 export default function Treino() {
     const { user, signOut } = useContext(AuthContext);
-    const [treinos, setTreinos] = useState(null)
+    const [exercicios, setExercicio] = useState(null)
     const [modalVisible, setModalVisible] = useState(false);
-    const [newTreinoName, setNewTreinoName] = useState('');
-    const loadTreinos = async () => {
+    const [newExercicioName, setNewExercicioName] = useState('');
+    const [newSerieName, setNewSerieName] = useState('');
+    const [newRepeticaoName, setNewRepeticaoName] = useState('');
+    const [newPesoName, setNewPesoName] = useState('');
+    const [newObservacaoName, setNewObservacaoName] = useState('');
+    const [newPesoType, setNewPesoType] = useState('Kg')  
+    const [isEdit, setIsEdit] = useState(false)
+    const [idTreinoEdit, setIdTreinoEdit] = useState(null)
+    const [IdFicha, setIdFicha] = useState(null)
+    const loadExercicio = async () => {
         try {
             const idFichaJson = await AsyncStorage.getItem('idFicha')
             const idFicha = JSON.parse(idFichaJson);
-            console.log('ID ',idFicha)
+            setIdFicha(idFicha)
+
+            console.log('ID ', idFicha)
             const response = await api.get(`/fitback/ficha/${idFicha}`)
-            setTreinos(response.data.Exercicios)
+            setExercicio(response.data.Exercicios)
             console.log(response)
             return response
 
 
-        }  catch (error) {
+        } catch (error) {
             console.log(error)
         }
 
     }
     const createTreino = async () => {
-        if (newTreinoName.trim() === '') {
+        if (newExercicioName.trim() === '') {
             Alert.alert("Erro", "Por favor, digite um nome para a ficha.");
             return;
         }
         try {
-            const response = await api.post('/fitback/ficha/', {
-                name: newTreinoName
+            const response = await api.post(`/fitback/exercicio/${IdFicha}`, {
+                name: newExercicioName,
+                peso: parseFloat(newPesoName),
+                pesoType: newPesoType,
+                series: parseFloat(newSerieName),
+                repeticoes: parseFloat(newRepeticaoName),
+                observacoes: newObservacaoName
             })
+
+
             console.log(response)
             if (response.status == 201) {
                 setModalVisible(false)
-                loadTreinos()
+                loadExercicio()
             }
 
         } catch (error) {
             Alert.alert("Erro ao conectar com servidor");
-            
+
         }
         console.log('Criou')
     }
+    const editTreino = async () => {
 
-    
+        if (newExercicioName.trim() === '') {
+            Alert.alert("Erro", "Por favor, digite um nome para a ficha.");
+            return;
+        }
+        try {
+            const response = await api.put(`/fitback/exercicio/${idTreinoEdit}/${IdFicha}`, {
+                name: newExercicioName,
+                peso: parseFloat(newPesoName),
+                pesoType: newPesoType,
+                series: parseFloat(newSerieName),
+                repeticoes: parseFloat(newRepeticaoName),
+                observacoes: newObservacaoName
+            })
 
-    useFocusEffect(() => {
-        loadTreinos()
+
+            console.log(response)
+            if (response.status == 200) {
+                setModalVisible(false)
+                loadExercicio()
+            }
+
+        } catch (error) {
+            Alert.alert("Erro ao conectar com servidor");
+
+        }
+        console.log('Criou')
+    }
+    const onPressEdit = async (id) => {
+        const FichaId = IdFicha
+        const response = await api.get(`/fitback/exercicio/${id}/${FichaId}`)
+        const exercicio = response.data
+        setNewExercicioName(exercicio.name)
+        setNewSerieName(exercicio.series)
+        setNewPesoName(exercicio.peso)
+        setNewObservacaoName(exercicio.observacoes)
+        setNewPesoType(exercicio.pesoType)
+        setNewRepeticaoName(exercicio.repeticoes)
+
+
+        console.log(exercicio)
+
+        console.log(id)
+        setIdTreinoEdit(id)
+        setIsEdit(true)
+        setModalVisible(true)
+    }
 
 
 
 
-    }, [])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const controlPesoType = () => {
+
+        if (newPesoType == 'Kg') {
+            setNewPesoType('Placas')  
+        } else if (newPesoType == 'Placas') {
+            setNewPesoType('Libras')
+        } else if (newPesoType == 'Libras') {
+            setNewPesoType('Kg')
+        } else {
+            setNewPesoType('Kg')
+        }
+    }
+
+useFocusEffect(
+  React.useCallback(() => {
+     loadExercicio()
+  }, [])
+);
+
+
 
     return (
         <View style={styles.container}>
@@ -70,69 +171,108 @@ export default function Treino() {
             >
                 <View style={styles.modalCenteredView}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>Nova Treino</Text>
-                        
+                        {!isEdit ? (<Text style={styles.modalTitle}>Novo Exercício</Text>): (<Text style={styles.modalTitle}>Editar Exercício</Text>) }
+
                         <TextInput
                             style={styles.input}
-                            placeholder="Nome do treino"
-                            value={newTreinoName}
-                            onChangeText={setNewTreinoName}
-                            autoFocus={true} 
+                            placeholder="Nome do exercicio"
+                            value={newExercicioName}
+                            onChangeText={setNewExercicioName}
+                            autoFocus={true}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Séries"
+                            value={newSerieName}
+                            onChangeText={setNewSerieName}
+                            autoFocus={true}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Repetições"
+                            value={newRepeticaoName}
+                            onChangeText={setNewRepeticaoName}
+                            autoFocus={true}
+                        />
+                        <Pressable style={{padding: 3, alignSelf: 'flex-start',marginLeft: 12, borderRadius:10, marginLeft: 0, backgroundColor: '#dadada', width: "15%", alignItems: 'center'}} onPress = {controlPesoType}><Text>{newPesoType}</Text></Pressable>
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Peso"
+                            value={newPesoName}
+                            onChangeText={setNewPesoName}
+                            autoFocus={true}
                         />
 
+
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Observacões"
+                            value={newObservacaoName}
+                            onChangeText={setNewObservacaoName}
+                            autoFocus={true}
+                        />
+
+
+
                         <View style={styles.modalButtons}>
-                            <Pressable 
-                                style={[styles.buttonModal, styles.buttonCancel]} 
+                            <Pressable
+                                style={[styles.buttonModal, styles.buttonCancel]}
                                 onPress={() => setModalVisible(false)}
                             >
                                 <Text style={styles.textStyle}>Cancelar</Text>
                             </Pressable>
 
-                            <Pressable 
-                                style={[styles.buttonModal, styles.buttonSave]} 
-                                onPress={createTreino}
-                            >
-                                <Text style={styles.textStyle}>Salvar</Text>
-                            </Pressable>
+                            {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createTreino}><Text style={styles.textStyle}>Salvar</Text></Pressable>) :
+                                
+                                (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={editTreino}><Text style={styles.textStyle}>Editar</Text></Pressable>)}
                         </View>
                     </View>
                 </View>
             </Modal>
 
             <View style={styles.cabecalhoContainer}>
-                <View style={{flexDirection:'row'}}>
-                <View style={styles.ProfileContainer}>
-                    
-                    {!user?.user?.avatar ?
-                        (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
-                        (<Image source={user?.user?.avatar} style={{ width: 40, height: 40, borderRadius: 20}}></Image>)}
-                </View>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.ProfileContainer}>
+
+                        {!user?.user?.avatar ?
+                            (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
+                            (<Image source={user?.user?.avatar} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
+                    </View>
                     <Text style={styles.title}>{user?.user?.name}</Text>
-                    </View>    
-            
+                </View>
+
             </View>
-            <Text style={styles.email }>{user?.user?.email}</Text>
+            <Text style={styles.email}>{user?.user?.email}</Text>
 
-            <View style={{flexDirection:'row', marginTop: 100, marginLeft: 20}}>
-            <Text style={{ fontSize: 25, fontFamily: 'Arial', marginRight: 10 }}>Treinos</Text>
-            <Pressable onPress={() => setModalVisible(true)}><Entypo name="plus" size={30} color="black" /></Pressable>
+            <View style={{ flexDirection: 'row', marginTop: 20, marginBotton: 10, marginLeft: 20 }}>
+                <Text style={{ fontSize: 25, fontFamily: 'Arial', marginRight: 10 }}>Exercícios</Text>
+                <Pressable onPress={() => {
+                    setModalVisible(true)
+                    setIsEdit(false)
+                    setNewExercicioName('')
+                    setNewSerieName('')
+                    setNewPesoName('')
+                    setNewObservacaoName('')
+                    setNewRepeticaoName('')
+                }}><Entypo name="plus" size={30} color="black" /></Pressable>
             </View>
 
-             <ScrollView>       
-            {!treinos || treinos.length === 0 ?
-                (<Text>Você ainda não possui treinos</Text>) :
+            <ScrollView>
+                {!exercicios || exercicios.length === 0 ?
+                    (<Text>Você ainda não possui exercicios</Text>) :
 
 
-                (treinos.map((treino) => (
-                    <Ficha name={treino.name} id={treino.id} onDeletePress={loadTreinos}></Ficha>
-                )
-                ))
+                    (exercicios.map((exercicio) => (
+                        <Exercicio key={exercicio.id} data={exercicio} onDeletePress={loadExercicio} onEditPress={ (id) => onPressEdit(id)}></Exercicio>
+                    )
+                    ))
 
                 }
-             </ScrollView>    
+            </ScrollView>
 
 
-            
+
 
 
 
@@ -144,7 +284,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        
+
     },
     title: {
         fontSize: 22,
@@ -182,7 +322,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 20,
         color: '#888888'
-        
+
     },
     modalCenteredView: {
         flex: 1,
