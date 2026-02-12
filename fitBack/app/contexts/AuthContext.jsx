@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
             
         } finally {
             await AsyncStorage.removeItem('user')
+            await AsyncStorage.removeItem('idFicha')
             setUser(null);
         }
             

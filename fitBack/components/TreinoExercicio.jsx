@@ -6,12 +6,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router'
-export default function Exercicio({onDeletePress, data, onEditPress }) {
+export default function Exercicio({ onDeletePress, data, onEditPress }) {
 
     const editTreino = () => {
         console.log('Edit')
-        onEditPress(data.id)  
-        
+        onEditPress(data.id)
+
     }
     const removeTreino = async () => {
         try {
@@ -23,21 +23,21 @@ export default function Exercicio({onDeletePress, data, onEditPress }) {
                 if (response.status == 204) {
                     onDeletePress()
                 } else {
-                     Alert.alert("Erro ao conectar com servidor. Logue novamente");
+                    Alert.alert("Erro ao conectar com servidor. Logue novamente");
                 }
 
             }
         } catch (error) {
             console.log('Erro ao deletar ', error)
             Alert.alert("Erro ao conectar com servidor. Logue novamente");
-            
+
         }
-        
+
     }
 
     return (
         <View style={styles.card}>
-    
+
             <View style={styles.header}>
                 <Text style={styles.title}>{data.name}</Text>
                 <View style={styles.icons}>
@@ -50,13 +50,13 @@ export default function Exercicio({onDeletePress, data, onEditPress }) {
                 </View>
             </View>
 
-           
+
             <View style={styles.gridContainer}>
                 <View style={styles.gridItem}>
                     <Text style={styles.label}>SÉRIES</Text>
                     <Text style={styles.value}>{data.series}</Text>
                 </View>
-                
+
                 <View style={styles.separator} />
 
                 <View style={styles.gridItem}>
@@ -73,7 +73,7 @@ export default function Exercicio({onDeletePress, data, onEditPress }) {
             </View>
 
             {data.observacoes ? (
-                
+
                 <View style={styles.footer}>
                     <MaterialCommunityIcons
                         name="notebook-outline"
@@ -81,7 +81,7 @@ export default function Exercicio({onDeletePress, data, onEditPress }) {
                         color="#666"
                         style={{ marginRight: 8 }}
                     />
-    
+
                     <ScrollView
                         horizontal={true}
                         showsHorizontalScrollIndicator={true}
@@ -117,10 +117,10 @@ const styles = {
         backgroundColor: '#fff',
         borderRadius: 15,
         marginVertical: 1,
-        marginHorizontal: 16, 
+        marginHorizontal: 16,
         padding: 4,
-        elevation: 3, 
-        shadowColor: '#000', 
+        elevation: 3,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -167,7 +167,7 @@ const styles = {
     value: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#2196F3', 
+        color: '#2196F3',
     },
     footer: {
         marginTop: 10,

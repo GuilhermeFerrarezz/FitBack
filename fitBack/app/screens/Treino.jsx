@@ -16,7 +16,7 @@ export default function Treino() {
     const [newRepeticaoName, setNewRepeticaoName] = useState('');
     const [newPesoName, setNewPesoName] = useState('');
     const [newObservacaoName, setNewObservacaoName] = useState('');
-    const [newPesoType, setNewPesoType] = useState('Kg')  
+    const [newPesoType, setNewPesoType] = useState('Kg')
     const [isEdit, setIsEdit] = useState(false)
     const [idTreinoEdit, setIdTreinoEdit] = useState(null)
     const [IdFicha, setIdFicha] = useState(null)
@@ -88,7 +88,7 @@ export default function Treino() {
                 setModalVisible(false)
                 loadExercicio()
             } else {
-                 Alert.alert("Erro ao conectar com servidor. Logue novamente");
+                Alert.alert("Erro ao conectar com servidor. Logue novamente");
             }
 
         } catch (error) {
@@ -145,7 +145,7 @@ export default function Treino() {
     const controlPesoType = () => {
 
         if (newPesoType == 'Kg') {
-            setNewPesoType('Placas')  
+            setNewPesoType('Placas')
         } else if (newPesoType == 'Placas') {
             setNewPesoType('Libras')
         } else if (newPesoType == 'Libras') {
@@ -155,11 +155,11 @@ export default function Treino() {
         }
     }
 
-useFocusEffect(
-  React.useCallback(() => {
-     loadExercicio()
-  }, [])
-);
+    useFocusEffect(
+        React.useCallback(() => {
+            loadExercicio()
+        }, [])
+    );
 
 
 
@@ -173,7 +173,7 @@ useFocusEffect(
             >
                 <View style={styles.modalCenteredView}>
                     <View style={styles.modalView}>
-                        {!isEdit ? (<Text style={styles.modalTitle}>Novo Exercício</Text>):(<Text style={styles.modalTitle}>Editar Exercício</Text>) }
+                        {!isEdit ? (<Text style={styles.modalTitle}>Novo Exercício</Text>) : (<Text style={styles.modalTitle}>Editar Exercício</Text>)}
 
                         <TextInput
                             style={styles.input}
@@ -196,7 +196,7 @@ useFocusEffect(
                             onChangeText={setNewRepeticaoName}
                             autoFocus={true}
                         />
-                        <Pressable style={{padding: 3, alignSelf: 'flex-start',marginLeft: 12, borderRadius:10, marginLeft: 0, backgroundColor: '#dadada', width: "15%", alignItems: 'center'}} onPress = {controlPesoType}><Text>{newPesoType}</Text></Pressable>
+                        <Pressable style={{ padding: 3, alignSelf: 'flex-start', marginLeft: 12, borderRadius: 10, marginLeft: 0, backgroundColor: '#dadada', width: "15%", alignItems: 'center' }} onPress={controlPesoType}><Text>{newPesoType}</Text></Pressable>
 
                         <TextInput
                             style={styles.input}
@@ -226,7 +226,7 @@ useFocusEffect(
                             </Pressable>
 
                             {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createTreino}><Text style={styles.textStyle}>Salvar</Text></Pressable>) :
-                                
+
                                 (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={editTreino}><Text style={styles.textStyle}>Editar</Text></Pressable>)}
                         </View>
                     </View>
@@ -239,7 +239,7 @@ useFocusEffect(
 
                         {!user?.user?.avatar ?
                             (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
-                            (<Image source={{uri: user?.user?.avatar}} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
+                            (<Image source={{ uri: user?.user?.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
                     </View>
                     <Text style={styles.title}>{user?.user?.name}</Text>
                 </View>
@@ -266,7 +266,7 @@ useFocusEffect(
 
 
                     (exercicios.map((exercicio) => (
-                        <Exercicio key={exercicio.id} data={exercicio} onDeletePress={loadExercicio} onEditPress={ (id) => onPressEdit(id)}></Exercicio>
+                        <Exercicio key={exercicio.id} data={exercicio} onDeletePress={loadExercicio} onEditPress={(id) => onPressEdit(id)}></Exercicio>
                     )
                     ))
 
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        flex: 1,          
+        flex: 1,
         flexWrap: 'wrap',
         marginLeft: 10,
     },

@@ -5,35 +5,35 @@ import { router } from 'expo-router'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 export default function Menu() {
     const { user, signOut } = useContext(AuthContext);
-        return (
-            <View style={{ flex: 1}}>
-                <View style={styles.cabecalhoContainer}>
-                <View style={{flexDirection:'row', flex: 1, alignItems: 'center', paddingRight: 10}}>
-                <View style={styles.ProfileContainer}>
-                    
-                    {!user?.user?.avatar ?
-                        (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
-                        (<Image source={{uri: user?.user?.avatar}} style={{ width: 40, height: 40, borderRadius: 20}}></Image>)}
-                </View>
+    return (
+        <View style={{ flex: 1 }}>
+            <View style={styles.cabecalhoContainer}>
+                <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', paddingRight: 10 }}>
+                    <View style={styles.ProfileContainer}>
+
+                        {!user?.user?.avatar ?
+                            (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
+                            (<Image source={{ uri: user?.user?.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
+                    </View>
                     <Text style={styles.title}>{user?.user?.name}</Text>
-                    </View>    
-            
+                </View>
+
             </View>
-            <Text style={styles.email }>{user?.user?.email}</Text>
-                <Text style = {styles.title}>Menu</Text>
-                <TouchableOpacity style={styles.button} onPress={() => {
-                    signOut()
-                    router.navigate({ pathname: '../' })
-                    
-                  }}>
+            <Text style={styles.email}>{user?.user?.email}</Text>
+            <Text style={styles.title}>Menu</Text>
+            <TouchableOpacity style={styles.button} onPress={() => {
+                signOut()
+                router.navigate({ pathname: '../' })
+
+            }}>
                 <Text style={styles.buttonText}>Sair da Conta</Text>
             </TouchableOpacity>
-            </View>
-        );
+        </View>
+    );
 }
-    
+
 const styles = StyleSheet.create({
-    
+
     button: {
         marginTop: 30,
         padding: 15,
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         height: '7%',
         alignSelf: 'center',
         justifyContent: 'center',
-        alignItems:'center'
+        alignItems: 'center'
     },
     buttonText: {
         color: '#fff',
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 20,
         color: '#888888'
-        
+
     },
     title: {
         fontSize: 22,

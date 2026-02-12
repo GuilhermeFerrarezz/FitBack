@@ -16,7 +16,7 @@ export default function Ficha({ id, name, onDeletePress, onEditPress }) {
     }
     const editTreino = () => {
         console.log('Edit')
-        onEditPress(id)        
+        onEditPress(id)
     }
     const removeTreino = async () => {
         try {
@@ -30,26 +30,26 @@ export default function Ficha({ id, name, onDeletePress, onEditPress }) {
             }
         } catch (error) {
             console.log('Erro ao deletar ', error)
-            
+
         }
-        
+
     }
 
     return (
         <Pressable onPress={loadTreino}>
             <View style={styles.fichasPerfil}>
-            <View style={{flexDirection:'row'}}>
-            <View style={styles.iconeContainer}>
-                <MaterialCommunityIcons name="weight-lifter" size={24} color="black" />
-            </View>  
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.iconeContainer}>
+                        <MaterialCommunityIcons name="weight-lifter" size={24} color="black" />
+                    </View>
                     <Text style={{ marginTop: 5, marginLeft: 10, marginBotton: 0, fontSize: 20, textAlign: 'left' }}>{name}</Text>
                 </View>
-                <View style={{flexDirection:'row'}}>
-                <Pressable onPress={editTreino} style={{marginTop: 5, marginRight: 15, }}><AntDesign name="edit" size={20} color="black" /></Pressable>
-                <Pressable onPress={removeTreino} style={{ marginTop: 9, marginRight: 10, }} ><AntDesign name="delete" size={15} color="red" /></Pressable>
+                <View style={{ flexDirection: 'row' }}>
+                    <Pressable onPress={editTreino} style={{ marginTop: 5, marginRight: 15, }}><AntDesign name="edit" size={20} color="black" /></Pressable>
+                    <Pressable onPress={removeTreino} style={{ marginTop: 9, marginRight: 10, }} ><AntDesign name="delete" size={15} color="red" /></Pressable>
                 </View>
             </View>
-            </Pressable>
+        </Pressable>
 
 
     )

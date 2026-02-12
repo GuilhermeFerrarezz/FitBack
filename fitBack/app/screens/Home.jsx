@@ -16,8 +16,8 @@ export default function Home() {
         try {
             const response = await api.get('/fitback/fichas/')
             const dadosOrdenados = response.data.sort((a, b) => {
-            return a.name.localeCompare(b.name);
-        });
+                return a.name.localeCompare(b.name);
+            });
             setFichas(dadosOrdenados)
             console.log(response.data)
         } catch (error) {
@@ -42,7 +42,7 @@ export default function Home() {
 
         } catch (error) {
             Alert.alert("Erro ao conectar com servidor. Logue novamente");
-            
+
         }
         console.log('Criou')
     }
@@ -75,20 +75,8 @@ export default function Home() {
         setIsEdit(true)
         setModalVisible(true)
     }
-
-
-
-
-
-
-    
-
     useEffect(() => {
         loadFichas()
-
-
-
-
     }, [])
 
     return (
@@ -101,71 +89,66 @@ export default function Home() {
             >
                 <View style={styles.modalCenteredView}>
                     <View style={styles.modalView}>
-                        {!isEdit ? (<Text style={styles.modalTitle}>Nova Ficha</Text>):(<Text style={styles.modalTitle}>Editar Ficha</Text>) }
-                        
-                        
+                        {!isEdit ? (<Text style={styles.modalTitle}>Nova Ficha</Text>) : (<Text style={styles.modalTitle}>Editar Ficha</Text>)}
+
+
                         <TextInput
                             style={styles.input}
                             placeholder="Nome do treino"
                             value={newFichaName}
                             onChangeText={setNewFichaName}
-                            autoFocus={true} 
+                            autoFocus={true}
                         />
 
                         <View style={styles.modalButtons}>
-                            <Pressable 
-                                style={[styles.buttonModal, styles.buttonCancel]} 
+                            <Pressable
+                                style={[styles.buttonModal, styles.buttonCancel]}
                                 onPress={() => setModalVisible(false)}
                             >
                                 <Text style={styles.textStyle}>Cancelar</Text>
                             </Pressable>
-                            {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createFicha}><Text style={styles.textStyle}>Salvar</Text></Pressable>):
+                            {!isEdit ? (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={createFicha}><Text style={styles.textStyle}>Salvar</Text></Pressable>) :
                                 (<Pressable style={[styles.buttonModal, styles.buttonSave]} onPress={editFicha}><Text style={styles.textStyle}>Editar</Text></Pressable>)}
-                           
+
                         </View>
                     </View>
                 </View>
             </Modal>
 
             <View style={styles.cabecalhoContainer}>
-                <View style={{flexDirection:'row', flex: 1, alignItems: 'center', paddingRight: 10}}>
-                <View style={styles.ProfileContainer}>
-                    
-                    {!user?.user?.avatar ?
-                        (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
-                        (<Image source={{uri: user?.user?.avatar}} style={{ width: 40, height: 40, borderRadius: 20}}></Image>)}
-                </View>
-                    <Text style={styles.title}>{user?.user?.name}</Text>
-                    </View>    
-            
-            </View>
-            <Text style={styles.email }>{user?.user?.email}</Text>
+                <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', paddingRight: 10 }}>
+                    <View style={styles.ProfileContainer}>
 
-            <View style={{flexDirection:'row', marginTop: 100, marginLeft: 20}}>
-            <Text style={{ fontSize: 25, fontFamily: 'Arial', marginRight: 10 }}>Treinos</Text>
+                        {!user?.user?.avatar ?
+                            (<FontAwesome5 style={styles.profile} name="user" size={24} color="black" />) :
+                            (<Image source={{ uri: user?.user?.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }}></Image>)}
+                    </View>
+                    <Text style={styles.title}>{user?.user?.name}</Text>
+                </View>
+
+            </View>
+            <Text style={styles.email}>{user?.user?.email}</Text>
+
+            <View style={{ flexDirection: 'row', marginTop: 100, marginLeft: 20 }}>
+                <Text style={{ fontSize: 25, fontFamily: 'Arial', marginRight: 10 }}>Treinos</Text>
                 <Pressable onPress={() => {
                     setModalVisible(true)
                     setIsEdit(false)
                 }}><Entypo name="plus" size={30} color="black" /></Pressable>
             </View>
 
-             <ScrollView>       
-            {!fichas || fichas.length === 0 ?
-                (<Text>Você ainda não possui fichas</Text>) :
+            <ScrollView>
+                {!fichas || fichas.length === 0 ?
+                    (<Text>Você ainda não possui fichas</Text>) :
 
 
-                (fichas.map((ficha) => (
-                    <Ficha key={ficha.id} name={ficha.name} id={ficha.id} onDeletePress={loadFichas} onEditPress={ (id) => onPressEdit(id)}></Ficha>
-                )
-                ))
+                    (fichas.map((ficha) => (
+                        <Ficha key={ficha.id} name={ficha.name} id={ficha.id} onDeletePress={loadFichas} onEditPress={(id) => onPressEdit(id)}></Ficha>
+                    )
+                    ))
 
                 }
-             </ScrollView>    
-
-
-            
-
-
+            </ScrollView>
 
         </View>
     );
@@ -175,12 +158,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        
+
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
-        flex: 1,          
+        flex: 1,
         flexWrap: 'wrap',
         marginLeft: 10,
     },
@@ -214,13 +197,13 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginLeft: 20,
         color: '#888888'
-        
+
     },
     modalCenteredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: 'rgba(0,0,0,0.5)' // Fundo escuro transparente
+        backgroundColor: 'rgba(0,0,0,0.5)' 
     },
     modalView: {
         width: '80%',

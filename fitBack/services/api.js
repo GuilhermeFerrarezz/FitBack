@@ -2,18 +2,20 @@ import axios from 'axios';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 let baseUrl = null
+// http://192.168.100.216:5000
+// 10.2.2.0
 if (Platform.OS == 'android') {
-    baseUrl = 'http://192.168.100.216:5000'
-    
+    baseUrl = 'https://fitback-api.onrender.com'
+
 } else {
-    baseUrl = 'http://192.168.100.216:5000'
+    baseUrl = 'https://fitback-api.onrender.com'
 
 }
-    
+
 
 const api = axios.create({
     baseURL: baseUrl,
-    timeout: 3000,
+    timeout: 5000,
 
 })
 
@@ -24,25 +26,25 @@ api.interceptors.request.use(
             const userData = JSON.parse(userJson);
             const token = userData.token;
             console.log('Token interceptado: ', token)
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`
-        }
-    
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`
+            }
+
         }
         return config
-        
+
     },
     (error) => Promise.reject(error)
 )
 
 api.interceptors.response.use(
-    
+
     (response) => response,
-    
+
     async (error) => {
         const originalRequest = error.config;
         const isAuthRequest = originalRequest.url.includes('/auth/');
-        
+
         if (error?.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
             originalRequest._retry = true
             try {
@@ -55,7 +57,7 @@ api.interceptors.response.use(
                     requestToken: refreshToken
                 })
                 console.log('DATA: ', data)
-        
+
 
 
                 const newAccessToken = data.data.accessToken

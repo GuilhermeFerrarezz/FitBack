@@ -12,7 +12,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 function LayoutDasAbas() {
     const { width } = useWindowDimensions();
     const barraLaranjaWidth = width * 0.2
-    
+
 
     const { signed } = useContext(AuthContext);
 
@@ -25,7 +25,7 @@ function LayoutDasAbas() {
                     borderTopColor: '#dbdbdbff',
                     paddingBottom: 5,
                     paddingTop: 5,
-                    display: signed ? 'flex' : 'none', 
+                    display: signed ? 'flex' : 'none',
                     height: signed ? 75 : 0,
                 },
                 tabBarActiveTintColor: 'rgb(0, 0, 0)',
@@ -89,7 +89,7 @@ function LayoutDasAbas() {
                 }}
 
             />
-            
+
             <Tabs.Screen name="screens/Home" options={{ href: null }} />
             <Tabs.Screen name="routes/Router" options={{ href: null }} />
             <Tabs.Screen name="screens/Login" options={{ href: null }} />
