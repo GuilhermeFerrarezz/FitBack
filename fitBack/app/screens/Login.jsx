@@ -14,8 +14,8 @@ export default function Login() {
     console.log("Contexto no Login:", signIn)
     const [error, setError] = useState()
     const [userData, setUserData] = useState();
-    const webClientId = process.env.EXPO_PUBLIC_WEB_CLIENT_ID
-    const androidClientId = process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID
+    const webClientId = '114462996883-lu4lgvp6j4ffkjjvvmfn8gjnh8e40inb.apps.googleusercontent.com'
+    const androidClientId = '114462996883-ia90lckhs1koritmvlr5opn6ovufd0fk.apps.googleusercontent.com'
     const [req, res, promptAsync] = GoogleAuthSession.useAuthRequest({
         webClientId: webClientId,
         androidClientId: androidClientId

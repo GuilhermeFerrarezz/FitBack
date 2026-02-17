@@ -95,6 +95,7 @@ function LayoutDasAbas() {
             <Tabs.Screen name="screens/Login" options={{ href: null }} />
             <Tabs.Screen name="screens/SingUp" options={{ href: null }} />
             <Tabs.Screen name="screens/Treino" options={{ href: null }} />
+            <Tabs.Screen name="contexts/AuthContext" options={{ href: null }} />
 
         </Tabs >
     );
