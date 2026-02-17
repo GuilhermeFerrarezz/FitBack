@@ -49,7 +49,7 @@ Before you begin, you will need to have the following tools installed on your ma
 
 > ** Important Note:** The backend API may take around 1 minute to wake up upon receiving the first request. Because of this, you will likely encounter a server connection error during the first minute of usage.
 
-### 🎲 Running the App (Front-end)
+###  Running the App (Front-end)
 
 ```bash
 # Clone this repository
